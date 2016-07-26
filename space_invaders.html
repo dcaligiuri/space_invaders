@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head> 
+<title>
+	Space Invaders!
+</title>
+<link rel="shortcut icon" href="http://sstatic.net/stackoverflow/img/favicon.ico">
+</head>
+
+<body>
+
+<canvas id="myCanvas" width="500" height="500" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+
+<img id="sprite" src="sprite.jpg">
+
+<img id="ship" src ="ship.jpg">
+
+<script>
+
+
+window.onload = function() {
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	ctx.beginPath();
+	ctx.rect(0, 0, 500, 500);
+	ctx.fillStyle = "black";
+	ctx.fill();
+    var img = document.getElementById("sprite");
+    var ship = document.getElementById("ship")
+    var pos1 = 10;
+    var pos2 = 100;
+    var pos3 = 200;
+    ctx.drawImage(img,pos1 ,10);
+    ctx.drawImage(img,pos2 ,100);
+    ctx.drawImage(img,pos3 ,100);
+    ctx.drawImage(ship,200 ,400);
+    var seconds = 0;
+    var x_pos = 0 
+	setInterval(function()
+	{ 
+		document.onkeydown = checkKey;
+
+function checkKey(e) {
+
+    e = e || window.event;
+
+   
+    if (e.keyCode == '37') {
+       	x_pos = x_pos - 10;
+       	ctx.drawImage(ship, 200 + x_pos , 400);
+    }
+    else if (e.keyCode == '39') {
+    	x_pos = x_pos + 10;
+    	ctx.drawImage(ship, 200 + x_pos , 400);
+       
+    }
+
+}
+    
+
+		ctx.clearRect (0, 0, 500, 500);
+		ctx.rect(0, 0, 500, 500);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.drawImage(img, pos1 + seconds ,10);
+		ctx.drawImage(img, pos2 + seconds ,100);
+		ctx.drawImage(img, pos3 + seconds ,100);
+		ctx.drawImage(ship, 200 + x_pos, 400);
+	
+		seconds = seconds + 20
+		
+	}, 1000);
+}
+
+
+
+</script>
+
+</body>
+</html>
+
