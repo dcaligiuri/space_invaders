@@ -1,0 +1,39 @@
+   var seconds = 0;
+	setInterval(function()
+	{ 
+		document.onkeydown = checkKey;
+
+function checkKey(e) {
+
+    e = e || window.event;
+
+   
+    if (e.keyCode == '37') {
+       	current_ship_pos = current_ship_pos - 10;
+       	ctx.drawImage(ship, current_ship_pos , 400);
+    }
+    else if (e.keyCode == '39') {
+    	current_ship_pos = current_ship_pos + 10;
+    	ctx.drawImage(ship, current_ship_pos , 400);
+       
+    }
+    else if (e.keyCode == '32'){
+    	ctx.drawImage(missile, current_ship_pos + 32 , 380);
+    	ctx.drawImage(missile, current_ship_pos + 32 , 380);
+    }
+
+}
+    
+		
+		ctx.clearRect (0, 0, 500, 500);
+		ctx.rect(0, 0, 500, 500);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.drawImage(alien, pos1 + seconds ,10);
+		ctx.drawImage(alien, pos2 + seconds ,100);
+		ctx.drawImage(alien, pos3 + seconds ,100);
+		ctx.drawImage(ship, current_ship_pos, 400);
+	
+		seconds = seconds + 20
+		
+	}, 1000);

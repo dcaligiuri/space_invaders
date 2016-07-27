@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head> 
-<title>
-	Space Invaders!
-</title>
-<link rel="shortcut icon" href="http://sstatic.net/stackoverflow/img/favicon.ico">
-</head>
+  <head> 
+    <title>
+      Space Invaders!
+    </title>
+  </head>
 
 <body>
 
@@ -13,66 +12,141 @@
 Your browser does not support the HTML5 canvas tag.</canvas>
 
 
-<img id="sprite" src="sprite.jpg">
-
+<img id="alien" src="alien.jpg">
 <img id="ship" src ="ship.jpg">
+<img id="missile" src="missile.png">
+
 
 <script>
+var widthBoard = 500; 
+var lengthBoard = 500; 
+var canvas = document.getElementById("myCanvas");
+var alien = document.getElementById("alien");
+var ship = document.getElementById("ship");
+var missile = document.getElementById("missile");
+var ctx = canvas.getContext("2d");
+var moveSpeed = 0;
+var turnAround = false 
 
+function Alien(sprite, xPos, yPos){
+  this.sprite = sprite;
+  this.xPos = xPos;
+  this.yPos = yPos;
+  
+  this.draw = function(){
+    ctx.drawImage(this.sprite, this.xPos, this.yPos);
+  }
+  
+  this.move = function(){
+    if (this.xPos === 0){
+      turnAround = true;
+    }
+    else if (this.xPos === 500){
+      turnAround = false;
+    }
+    if (turnAround == false){
+      this.moveLeft();
+    }
+    else if (turnAround == true){
+      this.moveRight();
+    }
+    
+   
+  }
+  
+  this.moveRight = function(){
+    this.xPos = this.xPos + 10;
+    this.draw();
+  }
+  
+  this.moveLeft = function(){
+    this.xPos = this.xPos - 10;
+    this.draw();
+  }
+}
+
+function Ship(sprite, xPos, yPos){
+  this.sprite = sprite;
+  this.spriteWidth = sprite.clientWidth;
+  this.xPos = xPos;
+  this.yPos = yPos;
+  this.draw = function(){
+    ctx.drawImage(this.sprite, this.xPos, this.yPos);
+  }
+}
+
+function Missile(sprite, xPos, yPos){
+  this.sprite = sprite;
+  this.xPos = xPos;
+  this.yPos = yPos;
+  this.draw = function(){
+    ctx.drawImage(this.sprite, this.xPos, this.yPos);
+  }
+  }
+
+
+var alien1 = new Alien(alien, 50, 100);
+var alien2 = new Alien(alien, 50, 200);
+var alien3 = new Alien(alien, 50, 300);
+var aliena = new Alien(alien, 100, 100);
+var alienb = new Alien(alien, 100, 200);
+var alienc = new Alien(alien, 100, 300);
+var alien4 = new Alien(alien, 200, 100);
+var alien5 = new Alien(alien, 200, 200);
+var alien6 = new Alien(alien, 200, 300);
+var alien7 = new Alien(alien, 300, 100);
+var alien8 = new Alien(alien, 300, 200);
+var alien9 = new Alien(alien, 300, 300);
+var alienArr = [alien1, alien2, alien3, alien4, aliena, alienb, alienc, alien5, alien6 , alien7, alien8, alien9]
+var ship = new Ship(ship, 200, 400);
 
 window.onload = function() {
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
+
 	ctx.beginPath();
-	ctx.rect(0, 0, 500, 500);
+	ctx.rect(0, 0, widthBoard, lengthBoard);
 	ctx.fillStyle = "black";
 	ctx.fill();
-    var img = document.getElementById("sprite");
-    var ship = document.getElementById("ship")
-    var pos1 = 10;
-    var pos2 = 100;
-    var pos3 = 200;
-    ctx.drawImage(img,pos1 ,10);
-    ctx.drawImage(img,pos2 ,100);
-    ctx.drawImage(img,pos3 ,100);
-    ctx.drawImage(ship,200 ,400);
-    var seconds = 0;
-    var x_pos = 0 
-	setInterval(function()
+	
+  for (var x = 0; x < alienArr.length; x++)
+  {
+    alienArr[x].draw();
+  }
+  
+  ship.draw();
+  
+  setInterval(function()
 	{ 
 		document.onkeydown = checkKey;
-
-function checkKey(e) {
-
-    e = e || window.event;
-
-   
-    if (e.keyCode == '37') {
-       	x_pos = x_pos - 10;
-       	ctx.drawImage(ship, 200 + x_pos , 400);
+	  for (var x = 0; x < alienArr.length; x++)
+    {
+      alienArr[x].move();
     }
-    else if (e.keyCode == '39') {
-    	x_pos = x_pos + 10;
-    	ctx.drawImage(ship, 200 + x_pos , 400);
-       
-    }
-
-}
-    
-
-		ctx.clearRect (0, 0, 500, 500);
-		ctx.rect(0, 0, 500, 500);
-		ctx.fillStyle = "black";
-		ctx.fill();
-		ctx.drawImage(img, pos1 + seconds ,10);
-		ctx.drawImage(img, pos2 + seconds ,100);
-		ctx.drawImage(img, pos3 + seconds ,100);
-		ctx.drawImage(ship, 200 + x_pos, 400);
 	
-		seconds = seconds + 20
+		
 		
 	}, 1000);
+ 
+  function checkKey(e) {
+    e = e || window.event;
+    
+    if (e.keyCode == '37') {
+      ship.xPos = ship.xPos - 10;
+      ship.draw();
+    }
+    else if (e.keyCode == '39') {
+      ship.xPos = ship.xPos + 10;
+      ship.draw();
+    }
+    else if (e.keyCode == '32'){
+      var missile1 = new Missile(missile, ship.xPos + ship.spriteWidth / 2 - 3, ship.yPos - 10 );
+      missile1.draw();
+    }
+
 }
+}
+
+
+
 
 
 
