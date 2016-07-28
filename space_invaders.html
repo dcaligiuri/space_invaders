@@ -26,7 +26,8 @@ var ship = document.getElementById("ship");
 var missile = document.getElementById("missile");
 var ctx = canvas.getContext("2d");
 var moveSpeed = 0;
-var turnAround = false 
+var turnAround = false;
+var missileArr = [];
 
 function Alien(sprite, xPos, yPos){
   this.sprite = sprite;
@@ -63,6 +64,11 @@ function Alien(sprite, xPos, yPos){
     this.xPos = this.xPos - 10;
     this.draw();
   }
+  
+  this.moveDown = function(){
+    this.yPos = this.yPos + 10;
+    this.draw();
+  }
 }
 
 function Ship(sprite, xPos, yPos){
@@ -81,6 +87,10 @@ function Missile(sprite, xPos, yPos){
   this.yPos = yPos;
   this.draw = function(){
     ctx.drawImage(this.sprite, this.xPos, this.yPos);
+  }
+  this.moveUp = function(){
+    this.yPos = this.yPos - 1;
+    this.draw();
   }
   }
 
@@ -107,18 +117,18 @@ window.onload = function() {
 	ctx.fillStyle = "black";
 	ctx.fill();
 	
-  for (var x = 0; x < alienArr.length; x++)
-  {
+  for (var x = 0; x < alienArr.length; x++){
     alienArr[x].draw();
   }
+  
   
   ship.draw();
   
   setInterval(function()
 	{ 
 		document.onkeydown = checkKey;
-	  for (var x = 0; x < alienArr.length; x++)
-    {
+		
+	  for (var x = 0; x < alienArr.length; x++){
       alienArr[x].move();
     }
 	
@@ -138,12 +148,26 @@ window.onload = function() {
       ship.draw();
     }
     else if (e.keyCode == '32'){
-      var missile1 = new Missile(missile, ship.xPos + ship.spriteWidth / 2 - 3, ship.yPos - 10 );
-      missile1.draw();
+      var newestMissile = new Missile(missile, ship.xPos + ship.spriteWidth / 2 - 3, ship.yPos - 10 );
+      missileArr.push(newestMissile);
+      newestMissile.draw();
     }
 
 }
 }
+
+
+ setInterval(function()
+	{ 
+
+    for (var i = 0; i < missileArr.length; i++){
+      missileArr[i].moveUp();
+    }
+    
+
+
+	}, 1);
+ 
 
 
 
