@@ -31,6 +31,8 @@ var missileArr = [];
 
 function Alien(sprite, xPos, yPos){
   this.sprite = sprite;
+  this.width = sprite.width;
+  this.height = sprite.height;
   this.xPos = xPos;
   this.yPos = yPos;
   
@@ -73,7 +75,8 @@ function Alien(sprite, xPos, yPos){
 
 function Ship(sprite, xPos, yPos){
   this.sprite = sprite;
-  this.spriteWidth = sprite.clientWidth;
+  this.width = sprite.width;
+  this.height = sprite.height;
   this.xPos = xPos;
   this.yPos = yPos;
   this.draw = function(){
@@ -107,7 +110,9 @@ var alien6 = new Alien(alien, 200, 300);
 var alien7 = new Alien(alien, 300, 100);
 var alien8 = new Alien(alien, 300, 200);
 var alien9 = new Alien(alien, 300, 300);
+
 var alienArr = [alien1, alien2, alien3, alien4, aliena, alienb, alienc, alien5, alien6 , alien7, alien8, alien9]
+
 var ship = new Ship(ship, 200, 400);
 
 window.onload = function() {
@@ -148,7 +153,7 @@ window.onload = function() {
       ship.draw();
     }
     else if (e.keyCode == '32'){
-      var newestMissile = new Missile(missile, ship.xPos + ship.spriteWidth / 2 - 3, ship.yPos - 10 );
+      var newestMissile = new Missile(missile, ship.xPos + ship.width / 2 - 3, ship.yPos - 10 );
       missileArr.push(newestMissile);
       newestMissile.draw();
     }
@@ -163,6 +168,21 @@ window.onload = function() {
     for (var i = 0; i < missileArr.length; i++){
       missileArr[i].moveUp();
     }
+    
+    for (var x = 0; x < missileArr.length; x++){
+      for (var y = 0; y < alienArr.length; y++){
+        if (alienArr[y].xPos <= missileArr[x].xPos && missileArr[x].xPos <= alienArr[y].width + alienArr[y].xPos &&
+        missileArr[x].yPos == alienArr[y].yPos + alienArr[y].height)
+        {
+          ctx.fillRect(alienArr[y].xPos, alienArr[y].yPos , alienArr[y].width ,alienArr[y].height);
+          alienArr.splice(y, 1);
+          missileArr.splice(x, 1);
+        }
+      }
+
+      }
+      
+
     
 
 
