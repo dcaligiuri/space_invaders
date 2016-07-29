@@ -18,6 +18,8 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 
 
 <script>
+var lives = 3;
+var score = 0;
 var widthBoard = 500; 
 var lengthBoard = 500; 
 var canvas = document.getElementById("myCanvas");
@@ -25,7 +27,6 @@ var alien = document.getElementById("alien");
 var ship = document.getElementById("ship");
 var missile = document.getElementById("missile");
 var ctx = canvas.getContext("2d");
-var moveSpeed = 0;
 var turnAround = false;
 var missileArr = [];
 
@@ -44,7 +45,7 @@ function Alien(sprite, xPos, yPos){
     if (this.xPos === 0){
       turnAround = true;
     }
-    else if (this.xPos === 500){
+    else if (500 - this.width < this.xPos && this.xPos < 500){
       turnAround = false;
     }
     if (turnAround == false){
@@ -86,6 +87,8 @@ function Ship(sprite, xPos, yPos){
 
 function Missile(sprite, xPos, yPos){
   this.sprite = sprite;
+  this.width = sprite.width;
+  this.height = sprite.height;
   this.xPos = xPos;
   this.yPos = yPos;
   this.draw = function(){
@@ -101,9 +104,9 @@ function Missile(sprite, xPos, yPos){
 var alien1 = new Alien(alien, 50, 100);
 var alien2 = new Alien(alien, 50, 200);
 var alien3 = new Alien(alien, 50, 300);
-var aliena = new Alien(alien, 100, 100);
-var alienb = new Alien(alien, 100, 200);
-var alienc = new Alien(alien, 100, 300);
+var aliena = new Alien(alien, 120, 100);
+var alienb = new Alien(alien, 120, 200);
+var alienc = new Alien(alien, 120, 300);
 var alien4 = new Alien(alien, 200, 100);
 var alien5 = new Alien(alien, 200, 200);
 var alien6 = new Alien(alien, 200, 300);
@@ -121,6 +124,8 @@ window.onload = function() {
 	ctx.rect(0, 0, widthBoard, lengthBoard);
 	ctx.fillStyle = "black";
 	ctx.fill();
+	ctx.font = "30px Arial";
+	
 	
   for (var x = 0; x < alienArr.length; x++){
     alienArr[x].draw();
@@ -132,6 +137,8 @@ window.onload = function() {
   setInterval(function()
 	{ 
 		document.onkeydown = checkKey;
+		
+		
 		
 	  for (var x = 0; x < alienArr.length; x++){
       alienArr[x].move();
@@ -164,6 +171,13 @@ window.onload = function() {
 
  setInterval(function()
 	{ 
+	  ctx.fillStyle = "black";
+	  ctx.fillRect(100,0,100,50);
+	  ctx.fillStyle = "white";
+	  ctx.fillText("Score : " + score,0,30);
+	  ctx.fillText("Lives : " + lives, 380, 30);
+	  ctx.fillStyle = "black";
+
 
     for (var i = 0; i < missileArr.length; i++){
       missileArr[i].moveUp();
@@ -175,27 +189,19 @@ window.onload = function() {
         missileArr[x].yPos == alienArr[y].yPos + alienArr[y].height)
         {
           ctx.fillRect(alienArr[y].xPos, alienArr[y].yPos , alienArr[y].width ,alienArr[y].height);
+          ctx.fillRect(missileArr[x].xPos, missileArr[x].yPos, missileArr[x].width, missileArr[x].height);
           alienArr.splice(y, 1);
           missileArr.splice(x, 1);
+          score = score + 10;
         }
       }
-
-      }
       
+      }
 
-    
-
-
+      
 	}, 1);
- 
-
-
-
-
-
 
 </script>
-
 </body>
 </html>
 
