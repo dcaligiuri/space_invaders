@@ -29,6 +29,7 @@ var missile = document.getElementById("missile");
 var ctx = canvas.getContext("2d");
 var turnAround = false;
 var missileArr = [];
+var canShoot = true; 
 
 function Alien(sprite, xPos, yPos){
   this.sprite = sprite;
@@ -101,9 +102,13 @@ function Missile(sprite, xPos, yPos){
   }
 
 
-var alien1 = new Alien(alien, 50, 100);
-var alien2 = new Alien(alien, 50, 200);
-var alien3 = new Alien(alien, 50, 300);
+var alien1 = new Alien(alien, 25, 40);
+var alien2 = new Alien(alien, 90, 40);
+var alien3 = new Alien(alien, 160, 40);
+var alienaa = new Alien(alien, 230, 40);
+var alienbb = new Alien(alien, 300, 40);
+var aliencc = new Alien(alien, 370, 40);
+var aliendd = new Alien(alien, 440, 40);
 var aliena = new Alien(alien, 120, 100);
 var alienb = new Alien(alien, 120, 200);
 var alienc = new Alien(alien, 120, 300);
@@ -113,8 +118,11 @@ var alien6 = new Alien(alien, 200, 300);
 var alien7 = new Alien(alien, 300, 100);
 var alien8 = new Alien(alien, 300, 200);
 var alien9 = new Alien(alien, 300, 300);
+var aliend = new Alien(alien, 360, 100);
+var aliene = new Alien(alien, 360, 200);
+var alienf = new Alien(alien, 360, 300);
 
-var alienArr = [alien1, alien2, alien3, alien4, aliena, alienb, alienc, alien5, alien6 , alien7, alien8, alien9]
+var alienArr = [alien1, alien2, alien3, alien4, aliena, alienaa, alienbb, aliencc, aliendd, alienb, alienf, aliene, aliend ,alienc, alien5, alien6 , alien7, alien8, alien9]
 
 var ship = new Ship(ship, 200, 400);
 
@@ -136,6 +144,7 @@ window.onload = function() {
   
   setInterval(function()
 	{ 
+	  canShoot = true; 
 		document.onkeydown = checkKey;
 		
 		
@@ -159,10 +168,11 @@ window.onload = function() {
       ship.xPos = ship.xPos + 10;
       ship.draw();
     }
-    else if (e.keyCode == '32'){
+    else if (e.keyCode == '32' && canShoot == true){
       var newestMissile = new Missile(missile, ship.xPos + ship.width / 2 - 3, ship.yPos - 10 );
       missileArr.push(newestMissile);
       newestMissile.draw();
+      canShoot = false; 
     }
 
 }
