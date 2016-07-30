@@ -28,7 +28,8 @@ var ship = document.getElementById("ship");
 var missile = document.getElementById("missile");
 var ctx = canvas.getContext("2d");
 var turnAround = false;
-var missileArr = [];
+var friendlyMissileArr = [];
+var enemyMissileArr = [];
 var canShoot = true; 
 
 function Alien(sprite, xPos, yPos){
@@ -75,6 +76,7 @@ function Alien(sprite, xPos, yPos){
   }
 }
 
+
 function Ship(sprite, xPos, yPos){
   this.sprite = sprite;
   this.width = sprite.width;
@@ -99,6 +101,10 @@ function Missile(sprite, xPos, yPos){
     this.yPos = this.yPos - 1;
     this.draw();
   }
+  this.moveDown = function(){
+    this.yPos = this.yPos + 1;
+    this.draw();
+  }
   }
 
 
@@ -115,19 +121,13 @@ var alienc = new Alien(alien, 120, 300);
 var alien4 = new Alien(alien, 200, 100);
 var alien5 = new Alien(alien, 200, 200);
 var alien6 = new Alien(alien, 200, 300);
-var alien7 = new Alien(alien, 300, 100);
-var alien8 = new Alien(alien, 300, 200);
-var alien9 = new Alien(alien, 300, 300);
-var aliend = new Alien(alien, 360, 100);
-var aliene = new Alien(alien, 360, 200);
-var alienf = new Alien(alien, 360, 300);
 
-var alienArr = [alien1, alien2, alien3, alien4, aliena, alienaa, alienbb, aliencc, aliendd, alienb, alienf, aliene, aliend ,alienc, alien5, alien6 , alien7, alien8, alien9]
+
+var alienArr = [alien1, alien2, alien3, alien4, aliena, alienaa, alienbb, aliencc, aliendd, alienb,alienc, alien5, alien6];
 
 var ship = new Ship(ship, 200, 400);
 
 window.onload = function() {
-
 	ctx.beginPath();
 	ctx.rect(0, 0, widthBoard, lengthBoard);
 	ctx.fillStyle = "black";
@@ -138,6 +138,21 @@ window.onload = function() {
   for (var x = 0; x < alienArr.length; x++){
     alienArr[x].draw();
   }
+  
+  
+    for (var k = 0; k < alienArr.length; k++){
+    var tempHighest = alienArr[0].yPos;
+    if (tempHighest < alienArr[k].yPos){
+      tempHighest = alienArr[k].yPos;
+    }
+  }
+  
+  for (var i = 0; i < alienArr.length; i++){
+    if (alienArr[i].yPos == tempHighest){
+      enemyMissileArr.push(new Missile(missile, alienArr[i].xPos + alienArr[i].width / 2, alienArr[i].yPos + alienArr[i].height + 10 ));
+      }
+    }
+
   
   
   ship.draw();
@@ -170,7 +185,7 @@ window.onload = function() {
     }
     else if (e.keyCode == '32' && canShoot == true){
       var newestMissile = new Missile(missile, ship.xPos + ship.width / 2 - 3, ship.yPos - 10 );
-      missileArr.push(newestMissile);
+      friendlyMissileArr.push(newestMissile);
       newestMissile.draw();
       canShoot = false; 
     }
@@ -189,19 +204,23 @@ window.onload = function() {
 	  ctx.fillStyle = "black";
 
 
-    for (var i = 0; i < missileArr.length; i++){
-      missileArr[i].moveUp();
+    for (var i = 0; i < friendlyMissileArr.length; i++){
+      friendlyMissileArr[i].moveUp();
     }
     
-    for (var x = 0; x < missileArr.length; x++){
+    for (var k = 0; k < enemyMissileArr.length; k++){
+      enemyMissileArr[k].moveDown();
+    }
+    
+    for (var x = 0; x < friendlyMissileArr.length; x++){
       for (var y = 0; y < alienArr.length; y++){
-        if (alienArr[y].xPos <= missileArr[x].xPos && missileArr[x].xPos <= alienArr[y].width + alienArr[y].xPos &&
-        missileArr[x].yPos == alienArr[y].yPos + alienArr[y].height)
+        if (alienArr[y].xPos <= friendlyMissileArr[x].xPos && friendlyMissileArr[x].xPos <= alienArr[y].width + alienArr[y].xPos &&
+        friendlyMissileArr[x].yPos == alienArr[y].yPos + alienArr[y].height)
         {
           ctx.fillRect(alienArr[y].xPos, alienArr[y].yPos , alienArr[y].width ,alienArr[y].height);
-          ctx.fillRect(missileArr[x].xPos, missileArr[x].yPos, missileArr[x].width, missileArr[x].height);
+          ctx.fillRect(friendlyMissileArr[x].xPos, friendlyMissileArr[x].yPos, friendlyMissileArr[x].width, friendlyMissileArr[x].height);
           alienArr.splice(y, 1);
-          missileArr.splice(x, 1);
+          friendlyMissileArr.splice(x, 1);
           score = score + 10;
         }
       }
