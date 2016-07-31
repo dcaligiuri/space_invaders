@@ -181,7 +181,7 @@ setInterval(function()
       turnAround = true;
       alienArr[x].moveDown();
     }
-    else if (tempFurthestRight >= 445 && tempFurthestRight <= 500){
+    else if (tempFurthestRight >= 435 && tempFurthestRight <= 520){
       turnAround = false;
       alienArr[x].moveDown();
     }
@@ -200,13 +200,13 @@ setInterval(function()
 
   setInterval(function()
 	{ 
-	  
+	
 	  ctx.fillStyle = "white";
 	  ctx.fillText("Score : " + score, 0, 30);
 	  ctx.fillText("Lives : " + lives, 380, 30);
 	  ctx.fillStyle = "black";
-	  
-	   ctx.fillRect(0, base1.yPos + base1.height , 500, 120),
+
+	  ctx.fillRect(0, base1.yPos + base1.height , 500, 120),
 	   ship.draw();
 	   for (var i = 0; i < friendlyMissileArr.length; i++){
       friendlyMissileArr[i].moveUp();
@@ -226,8 +226,16 @@ setInterval(function()
       
       }
     
+
     for (var x = 0; x < enemyMissileArr.length; x++){
-      enemyMissileArr[x].moveDown();
+      enemyMissileArr[x].moveDown()
+      for (var i = 0; i < baseArr.length; i++){
+        if (baseArr[i].xPos <= enemyMissileArr[x].xPos && enemyMissileArr[x].xPos <= baseArr[i].width + baseArr[i].xPos &&
+        enemyMissileArr[x].yPos == baseArr[i].yPos - baseArr[i].height){
+          ctx.fillRect(enemyMissileArr[x].xPos, enemyMissileArr[x].yPos, enemyMissileArr[x].width, enemyMissileArr[x].height);
+          enemyMissileArr.splice(x, 1);
+        }
+      }
     }
 	  
 	}, 1);
