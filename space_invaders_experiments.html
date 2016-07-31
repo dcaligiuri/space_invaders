@@ -70,7 +70,7 @@ function Alien(sprite, xPos, yPos){
   }
   
   this.moveDown = function(){
-    this.yPos = this.yPos + 5;
+    this.yPos = this.yPos + 10;
     this.draw();
   }
 }
@@ -99,7 +99,6 @@ function Missile(sprite, xPos, yPos){
   }
   this.moveDown = function(){
     this.yPos = this.yPos + 1;
-    this.draw();
   }
   }
 
@@ -162,41 +161,12 @@ setInterval(function()
 	}
 	
   for (var x = 0; x < alienArr.length; x++){
-    var tempFurthestRight = alienArr[0].xPos;
-    var tempFurthestLeft = alienArr[0].xPos;
-    var tempFurthestDown = alienArr[0].yPos;
-    if (alienArr[x].xPos > tempFurthestRight){
-      tempFurthestRight = alienArr[x].xPos;
-    }
-    if (alienArr[x].xPos < tempFurthestLeft){
-      tempFurthestLeft = alienArr[x].xPos;
-    }
-    if (alienArr[x].yPos > tempFurthestDown){
-      tempFurthestDown = alienArr[x].yPos;
-    }
+    alienArr[x].moveRight();
   }
   
-  for (var x = 0; x < alienArr.length; x++){
-    if (tempFurthestLeft >= -8.5 && tempFurthestLeft <= 24.5){
-      turnAround = true;
-      alienArr[x].moveDown();
-    }
-    else if (tempFurthestRight >= 445 && tempFurthestRight <= 500){
-      turnAround = false;
-      alienArr[x].moveDown();
-    }
-    if (turnAround == false){
-      alienArr[x].moveLeft();
-    }
-    else if (turnAround == true){
-      alienArr[x].moveRight();
-    }
-    if (alienArr[x].yPos == tempFurthestDown){
-      enemyMissileArr.push(new Missile(missile, alienArr[x].xPos + alienArr[x].width / 2 - 3, alienArr[x].yPos + alienArr[x].height + 10));
-    }
-  }
-
-
+  
+  
+  
 
   setInterval(function()
 	{ 
@@ -225,10 +195,6 @@ setInterval(function()
       }
       
       }
-    
-    for (var x = 0; x < enemyMissileArr.length; x++){
-      enemyMissileArr[x].moveDown();
-    }
 	  
 	}, 1);
 		
