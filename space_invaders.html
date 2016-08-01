@@ -18,7 +18,6 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 <img id="base" src ="base.png">
 
 <script>
-
 var lives = 3;
 var score = 0;
 var widthBoard = 500; 
@@ -35,7 +34,6 @@ var enemyMissileArr = [];
 var canShoot = true;
 var eligibleAttackers = [];
 
-
 function Base(sprite, xPos, yPos){
   this.sprite = sprite;
   this.width = sprite.width;
@@ -47,6 +45,7 @@ function Base(sprite, xPos, yPos){
     ctx.drawImage(this.sprite, this.xPos, this.yPos);
   }
 }
+
 function Alien(sprite, xPos, yPos){
   this.sprite = sprite;
   this.width = sprite.width;
@@ -73,6 +72,7 @@ function Alien(sprite, xPos, yPos){
     this.draw();
   }
 }
+
 function Ship(sprite, xPos, yPos){
   this.sprite = sprite;
   this.width = sprite.width;
@@ -83,6 +83,7 @@ function Ship(sprite, xPos, yPos){
     ctx.drawImage(this.sprite, this.xPos, this.yPos);
   }
 }
+
 function Missile(sprite, xPos, yPos){
   this.sprite = sprite;
   this.width = sprite.width;
@@ -106,18 +107,14 @@ function Missile(sprite, xPos, yPos){
 var alienArr = [];
 var baseArr = [];
 var ship = new Ship(ship, 200, 430);
-
-
 for (var x = 68; x <= 431; x = x + 33){
   for (var y = 40; y <= 164; y = y + 31){
     alienArr.push(new Alien(alien, x, y));
   }
 }
-
 for (var x = 52; x <= 388; x = x + 112){
   baseArr.push(new Base(base, x, 380));
 }
-
 
 window.onload = function() {
 setInterval(function()
@@ -183,11 +180,10 @@ setInterval(function()
       alienArr[x].moveRight();
     }
   }
-
-
+  
   for (var x = 0; x < eligibleAttackers.length; x++){
-    var luck = Math.floor((Math.random() * 10) + 1);
-    if (luck == 7){
+    var fire = Math.floor((Math.random() * 10) + 1);
+    if (fire == 7){
       enemyMissileArr.push(new Missile(missile, eligibleAttackers[x].xPos + eligibleAttackers[x].width / 2 - 3, eligibleAttackers[x].yPos + eligibleAttackers[x].height + 10));
     }
     if (x == eligibleAttackers.length - 1){
@@ -225,7 +221,40 @@ setInterval(function()
       }
     }
     
-    for (var x = 0; x < enemyMissileArr.length; x++){
+    
+    for (var i = 0; i < enemyMissileArr.length; i++){
+      if (ship.xPos <= enemyMissileArr[i].xPos && enemyMissileArr[i].xPos <= ship.xPos + ship.width && 
+      enemyMissileArr[i].yPos >= ship.yPos && enemyMissileArr[i].yPos <= ship.yPos + ship.height){
+        enemyMissileArr.splice(i, 1);
+        lives = lives - 1;
+      }
+    }
+    
+    if (lives <= 0){
+      alert("Game over man, GAME OVER");
+    }
+  
+	  
+	}, 1);
+	
+	var tempHighestX = alienArr[0].xPos;
+  var tempHighestY = alienArr[0].yPos;
+  for (var x = 0; x < alienArr.length; x ++){
+    if (alienArr[x].xPos > tempHighestX){
+        eligibleAttackers.push(alienArr[x-1]);
+        tempHighestX = alienArr[x].xPos;
+      }
+      if (alienArr[x].yPos > tempHighestY){
+        tempHighestY = alienArr[x].yPos;
+      }
+    }
+    
+    
+    
+    setInterval(function()
+	{ 
+
+ for (var x = 0; x < enemyMissileArr.length; x++){
       enemyMissileArr[x].moveDown()
       for (var i = 0; i < baseArr.length; i++){
         if (baseArr[i].xPos <= enemyMissileArr[x].xPos && enemyMissileArr[x].xPos <= baseArr[i].width + baseArr[i].xPos &&
@@ -236,32 +265,13 @@ setInterval(function()
       }
     }
     
-    var tempHighestX = alienArr[0].xPos;
-    var tempHighestY = alienArr[0].yPos;
-    for (var x = 0; x < alienArr.length; x ++){
-      if (alienArr[x].xPos > tempHighestX){
-        eligibleAttackers.push(alienArr[x-1]);
-        tempHighestX = alienArr[x].xPos;
-      }
-      if (alienArr[x].yPos > tempHighestY){
-        tempHighestY = alienArr[x].yPos;
-      }
-    }
 
- 
 	  
-	}, 1);
+	}, 80);
 	
-
+ 
+	
 		
 	}, 1000);
 }
-
-
-
-
-
 </script>
-
-
-
