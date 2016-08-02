@@ -17,7 +17,14 @@ Your browser does not support the HTML5 canvas tag.</canvas>
 <img id="missile" src="missile.png">
 <img id="base" src ="base.png">
 
+
 <script>
+var shoot = new Audio();
+var explosion = new Audio();
+var invaderKilled = new Audio();
+invaderKilled.src = "sounds/invaderkilled.wav";
+explosion.src = "sounds/explosion.wav";
+shoot.src = "sounds/shoot.wav";
 var lives = 3;
 var score = 0;
 var widthBoard = 500; 
@@ -107,11 +114,20 @@ function Missile(sprite, xPos, yPos){
 var alienArr = [];
 var baseArr = [];
 var ship = new Ship(ship, 200, 430);
-for (var x = 68; x <= 431; x = x + 33){
-  for (var y = 40; y <= 164; y = y + 31){
-    alienArr.push(new Alien(alien, x, y));
+
+
+function populateAlienArray(){
+  for (var x = 68; x <= 431; x = x + 33){
+    for (var y = 40; y <= 164; y = y + 31){
+      alienArr.push(new Alien(alien, x, y));
+    }
   }
 }
+
+populateAlienArray();
+
+
+
 for (var x = 52; x <= 388; x = x + 112){
   baseArr.push(new Base(base, x, 380));
 }
@@ -143,8 +159,9 @@ setInterval(function()
     else if (e.keyCode == '39') {
       ship.xPos = ship.xPos + 10;
     }
-    else if (e.keyCode == '32' && canShoot == true){
+    else if (e.keyCode == '32' && canShoot == true){ 
       friendlyMissileArr.push(new Missile(missile, ship.xPos + ship.width / 2 - 3, ship.yPos - 10 ));
+      shoot.play();
       canShoot = false;
     }
 }
@@ -215,6 +232,7 @@ setInterval(function()
           ctx.fillRect(alienArr[y].xPos, alienArr[y].yPos , alienArr[y].width ,alienArr[y].height);
           ctx.fillRect(friendlyMissileArr[x].xPos, friendlyMissileArr[x].yPos, friendlyMissileArr[x].width, friendlyMissileArr[x].height);
           alienArr.splice(y, 1);
+          invaderKilled.play();
           friendlyMissileArr.splice(x, 1);
           score = score + 10;
         }
@@ -226,12 +244,17 @@ setInterval(function()
       if (ship.xPos <= enemyMissileArr[i].xPos && enemyMissileArr[i].xPos <= ship.xPos + ship.width && 
       enemyMissileArr[i].yPos >= ship.yPos && enemyMissileArr[i].yPos <= ship.yPos + ship.height){
         enemyMissileArr.splice(i, 1);
+        explosion.play();
         lives = lives - 1;
       }
     }
     
     if (lives <= 0){
-      alert("Game over man, GAME OVER");
+      alert("GAME OVER\nSCORE : " + score);
+    }
+    
+    if (alienArr.length == 0){
+      populateAlienArray();
     }
   
 	  
